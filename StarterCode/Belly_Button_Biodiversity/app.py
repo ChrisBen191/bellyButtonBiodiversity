@@ -80,6 +80,8 @@ def sample_metadata(sample):
 
 
 @app.route("/samples/<sample>")
+# most likely will be used for the PieChart data
+# the <sample> here is the same ID as the <sample> at the metadata route above
 def samples(sample):
     """Return `otu_ids`, `otu_labels`,and `sample_values`."""
     stmt = db.session.query(Samples).statement

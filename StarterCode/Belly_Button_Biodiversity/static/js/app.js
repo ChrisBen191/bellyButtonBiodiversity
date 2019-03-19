@@ -1,5 +1,12 @@
 function buildMetadata(sample) {
 
+  d3.json(`metadata/${sample}`).then(function(data){
+    console.log(data);
+    let myHtmlBlock = d3.select('#sample-metadata').html(" ");
+    Object.keys(data).forEach( key => {
+      myHtmlBlock.append('p').text(key + ": " + data[key]);
+    });
+  })
   // @TODO: Complete the following function that builds the metadata panel
 
   // Use `d3.json` to fetch the metadata for a sample
@@ -15,8 +22,31 @@ function buildMetadata(sample) {
     // buildGauge(data.WFREQ);
 }
 
-function buildCharts(sample) {
+// Use sample_values as the values for the PIE Chart
+// Use otu_ids as the labels for the pie chart
+// Use otu_labels as the hovertext for the chart
 
+function buildCharts(sample) {
+  console.log(sample);
+  let url = `samples/${sample}`; // this is really the ID of the person
+  d3.json(url).then(function(data) {
+    let myValues = data.sample_values.slice(0,10);
+    let myLabels = data.otu_ids;
+  
+  // Plotly Pie Chart
+  var data = [{
+    values: myValues,
+    labels: myLabels,
+    type: 'pie'
+  }];
+  
+  var layout = {
+    height: 400,
+    width: 500
+  };
+  
+  Plotly.newPlot('pie', data, layout);
+  })
   // @TODO: Use `d3.json` to fetch the sample data for the plots
 
     // @TODO: Build a Bubble Chart using the sample data
@@ -47,6 +77,9 @@ function init() {
 }
 
 function optionChanged(newSample) {
+  // receives the Id of the pesron who gave the sample
+
+
   // Fetch new data each time a new sample is selected
   buildCharts(newSample);
   buildMetadata(newSample);
